@@ -129,49 +129,50 @@ For a quick reference of the **core Word2Vec training implementation**, see: [Im
 
 ```bash
 make help
-
+```
 ### Step 2: Prepare the dataset
 
 This cleans the raw recipe text and generates tokenized sentences.
 
 ```bash
 make prepare_data
-
+```
 ### Step 3: Generate training pairs
 
 Build the vocabulary and create Skip-Gram training pairs.
 
 ```bash
 make build_pairs
-
+```
 ### Step 4: Train the Word2Vec model
 This runs the full training loop using NumPy.
 
 ```bash
 make train_model
-
+```
 ### Step 5: Inspect learned embeddings
 
 Print nearest neighbors for selected words.
 
 ```bash
 make inspect_embeddings
-
+```
 ### Step 6: Create embedding visualizations
 
 Generate PCA and t-SNE projections.
 
 ```bash
 make plot_embeddings
-
+```
 ### Step 7: Plot word frequency distribution
 
 Visualize Zipf's law in the dataset.
 
 ```bash
 make plot_word_frequency
-
+```
 ### Step 8: Generate the Skip-Gram training diagram
 
 ```bash
 make visualize_training_diagram
+```
