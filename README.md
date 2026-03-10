@@ -1,57 +1,145 @@
-Word2Vec RecipeNLG
-==============================
+# Word2Vec from Scratch (NumPy) – RecipeNLG
 
-A clean NumPy implementation of the Word2Vec skip-gram model with negative sampling trained on the RecipeNLG dataset.
+This project implements **Word2Vec (Skip-Gram with Negative Sampling)** from scratch using **pure NumPy**.
 
-Project Organization
-------------
+The goal is to understand how word embeddings are learned by implementing the full training pipeline without using deep learning frameworks such as PyTorch or TensorFlow.
 
-    ├── LICENSE
-    ├── Makefile           <- Makefile with commands like `make data` or `make train`
-    ├── README.md          <- The top-level README for developers using this project.
-    ├── data
-    │   ├── external       <- Data from third party sources.
-    │   ├── interim        <- Intermediate data that has been transformed.
-    │   ├── processed      <- The final, canonical data sets for modeling.
-    │   └── raw            <- The original, immutable data dump.
-    │
-    ├── docs               <- A default Sphinx project; see sphinx-doc.org for details
-    │
-    ├── models             <- Trained and serialized models, model predictions, or model summaries
-    │
-    ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-    │                         the creator's initials, and a short `-` delimited description, e.g.
-    │                         `1.0-jqp-initial-data-exploration`.
-    │
-    ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
-    │
-    ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
-    │   └── figures        <- Generated graphics and figures to be used in reporting
-    │
-    ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-    │                         generated with `pip freeze > requirements.txt`
-    │
-    ├── setup.py           <- makes project pip installable (pip install -e .) so src can be imported
-    ├── src                <- Source code for use in this project.
-    │   ├── __init__.py    <- Makes src a Python module
-    │   │
-    │   ├── data           <- Scripts to download or generate data
-    │   │   └── make_dataset.py
-    │   │
-    │   ├── features       <- Scripts to turn raw data into features for modeling
-    │   │   └── build_features.py
-    │   │
-    │   ├── models         <- Scripts to train models and then use trained models to make
-    │   │   │                 predictions
-    │   │   ├── predict_model.py
-    │   │   └── train_model.py
-    │   │
-    │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
-    │       └── visualize.py
-    │
-    └── tox.ini            <- tox file with settings for running tox; see tox.readthedocs.io
+The model is trained on a subset of the **RecipeNLG dataset**, allowing the embeddings to learn relationships between ingredients and cooking terms.
+
+---
+
+# How to Run the Project
+
+The project includes a **Makefile** that runs each stage of the pipeline.
+
+### Show available commands
+make help
 
 
---------
+### Run the full pipeline
+make run_all
 
-<p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
+
+### Main steps
+make prepare_data
+make build_pairs
+make train_model
+make inspect_embeddings
+make plot_embeddings
+make plot_word_frequency
+make visualize_training_diagram
+
+
+---
+
+# Implementation Overview
+
+The Word2Vec implementation follows the standard **Skip-Gram with Negative Sampling** approach.
+
+### 1. Text preprocessing
+
+Recipes are cleaned and tokenized to create sequences of words.
+
+Example:
+garlic chicken pasta olive oil
+
+
+---
+
+### 2. Vocabulary creation
+
+All unique words are collected and mapped to integer indices.
+
+These indices allow words to be used in matrix operations during training.
+
+---
+
+### 3. Skip-Gram training pairs
+
+For each word in a sentence, the model generates training pairs with nearby words within a fixed context window.
+
+Example sentence:
+garlic chicken pasta olive oil
+
+
+Training pairs:
+
+(pasta → garlic)
+(pasta → chicken)
+(pasta → olive)
+(pasta → oil)
+
+
+---
+
+### 4. Word2Vec model
+
+The model learns two embedding matrices:
+1. input embeddings
+2. output embeddings
+
+
+During training:
+center word embedding → predicts surrounding words
+
+
+The embeddings are optimized using **stochastic gradient descent**.
+
+---
+
+### 5. Negative sampling
+
+Instead of computing probabilities over the entire vocabulary, the model samples a few random words as negative examples.
+
+This significantly reduces computation while still learning meaningful embeddings.
+
+---
+
+# Training Example
+
+The diagram below illustrates a Skip-Gram training step.
+
+A center word predicts surrounding context words.
+
+![Skip-Gram Training](reports/figures/skipgram_training_example.png)
+
+---
+
+# Word Frequency Distribution
+
+The dataset follows **Zipf's law**, where a few words appear very frequently while most words appear rarely.
+
+![Word Frequency](reports/figures/word_frequency_distribution.png)
+
+---
+
+# Word Embedding Visualization
+
+The learned embeddings can be visualized using dimensionality reduction.
+
+### PCA projection
+
+![PCA](reports/figures/embedding_pca.png)
+
+### t-SNE projection
+
+![t-SNE](reports/figures/embedding_tsne.png)
+
+Related ingredients and cooking terms cluster together in the embedding space.
+
+---
+
+# Technologies Used
+
+- Python
+- NumPy
+- Matplotlib
+- scikit-learn
+
+No deep learning frameworks were used.
+
+---
+
+# Author
+
+Andrea Loizidou
