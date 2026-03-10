@@ -53,7 +53,8 @@ flowchart LR
     E --> F[Trained Embeddings]
     F --> G[Embedding Visualization]
 
-    ## Word Frequency Distribution
+
+## Word Frequency Distribution
 
 The dataset follows **Zipf's Law**, where a small number of words appear very frequently while most words appear rarely.
 
