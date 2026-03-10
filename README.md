@@ -87,14 +87,13 @@ These visualizations show that semantically related ingredients cluster together
 ## Word Embedding Visualization
 
 The learned embeddings can be visualized using dimensionality reduction.  
-We use **PCA and t-SNE to project the high-dimensional word vectors into two dimensions so that relationships between words can be visually inspected.**
+We use **PCA and t-SNE** to project the high-dimensional word vectors into two dimensions so that relationships between words can be visually inspected.These show that semantically related ingredients cluster together in the embedding space.
 
 <p align="center">
   <img src="reports/figures/embedding_pca.png" width="47%" />
   <img src="reports/figures/embedding_tsne.png" width="47%" />
 </p>
 
-These visualizations show that semantically related ingredients cluster together in the embedding space.
 ---
 
 ## Skip-Gram Training Example
