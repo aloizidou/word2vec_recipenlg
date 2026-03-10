@@ -42,6 +42,12 @@ The training pipeline follows these steps:
 
 ---
 
+## Training Loop Reference
+
+For a quick reference of the **core Word2Vec training implementation**, see: [Implementation](models/train_word2vec.py)
+
+---
+
 ## System Flow
 
 ```mermaid
@@ -65,9 +71,8 @@ This long-tail distribution is typical for natural language data and explains wh
 
 ---
 
-## Word Embedding Visualization
 
-The learned embeddings can be visualized using dimensionality reduction.
+<!-- The learned embeddings can be visualized using dimensionality reduction.
 
 ### PCA projection
 
@@ -77,15 +82,22 @@ The learned embeddings can be visualized using dimensionality reduction.
 
 ![t-SNE](reports/figures/embedding_tsne.png)
 
-These visualizations show that semantically related ingredients cluster together in the embedding space.
+These visualizations show that semantically related ingredients cluster together in the embedding space. -->
 
+## Word Embedding Visualization
+
+The learned embeddings can be visualized using dimensionality reduction.  
+We use **PCA and t-SNE to project the high-dimensional word vectors into two dimensions so that relationships between words can be visually inspected.**
+
+<p align="center">
+  <img src="reports/figures/embedding_pca.png" width="45%" />
+  <img src="reports/figures/embedding_tsne.png" width="45%" />
+</p>
+
+These visualizations show that semantically related ingredients cluster together in the embedding space.
 ---
 
 ## Skip-Gram Training Example
-
-The figure below illustrates how a center word predicts nearby context words during training.
-
-![SkipGram](reports/figures/skipgram_training_example.png)
 
 Example sentence:
 garlic chicken pasta olive oil
@@ -118,10 +130,6 @@ This process is repeated across the dataset to learn meaningful word embeddings.
 See the full directory layout here: [Project Structure](project_structure.txt)
 
 ---
-
-## Training Loop Reference
-
-For a quick reference of the **core Word2Vec training implementation**, see: [Implementation](models/train_word2vec.py)
 
 ## How to Run
 
