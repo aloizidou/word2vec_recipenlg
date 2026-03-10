@@ -107,7 +107,7 @@ def main():
 
     embeddings, id_to_word = load_embeddings()
 
-    # choose a small set of cooking words
+    # chose only a few words so that the plot is clean! (with no overlaps of words!) but we can still get the point
     words_to_plot = [
         "garlic",
         "onion",
