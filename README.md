@@ -52,7 +52,8 @@ flowchart LR
     D --> E[Word2Vec Training Loop]
     E --> F[Trained Embeddings]
     F --> G[Embedding Visualization]
-
+```
+---
 
 ## Word Frequency Distribution
 
