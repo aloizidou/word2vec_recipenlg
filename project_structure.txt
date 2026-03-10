@@ -1,0 +1,37 @@
+.
+├── Makefile
+├── README.md
+├── data
+│   ├── external
+│   ├── interim
+│   │   └── tokenized_recipes.pkl
+│   ├── processed
+│   │   ├── skipgram_pairs.pkl
+│   │   └── vocabulary.pkl
+│   └── raw
+│       ├── RecipeNLG_code
+│       ├── RecipeNLG_dataset.csv
+│       ├── RecipeNLG_license.png
+│       └── RecipeNLG_paper.pdf
+├── dataset
+│   ├── build_features.py
+│   ├── downlaod_data.py
+│   └── prepare_data.py
+├── models
+│   ├── helpers.py
+│   ├── train_word2vec.py
+│   └── word2vec_embeddings.pkl
+├── project_structure.txt
+├── reports
+│   └── figures
+│       ├── embedding_pca.png
+│       ├── embedding_tsne.png
+│       └── word_frequency_distribution.png
+├── requirements.txt
+└── vizualization
+    ├── inspect_embeddings.py
+    ├── plot_embeddings.py
+    ├── plot_word_frequency.py
+    └── visualize_skipgram.py
+
+12 directories, 23 files

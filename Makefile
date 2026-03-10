@@ -1,144 +1,64 @@
-.PHONY: clean data lint requirements sync_data_to_s3 sync_data_from_s3
+.PHONY: help download_data prepare_data build_pairs train_model inspect_embeddings plot_embeddings plot_word_frequency visualize_training_diagram run_all
 
-#################################################################################
-# GLOBALS                                                                       #
-#################################################################################
-
-PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-BUCKET = [OPTIONAL] your-bucket-for-syncing-data (do not include 's3://')
-PROFILE = default
-PROJECT_NAME = word2vec_recipenlg
-PYTHON_INTERPRETER = python3
-
-ifeq (,$(shell which conda))
-HAS_CONDA=False
-else
-HAS_CONDA=True
-endif
-
-#################################################################################
-# COMMANDS                                                                      #
-#################################################################################
-
-## Install Python Dependencies
-requirements: test_environment
-	$(PYTHON_INTERPRETER) -m pip install -U pip setuptools wheel
-	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
-
-## Make Dataset
-data: requirements
-	$(PYTHON_INTERPRETER) src/data/make_dataset.py data/raw data/processed
-
-## Delete all compiled Python files
-clean:
-	find . -type f -name "*.py[co]" -delete
-	find . -type d -name "__pycache__" -delete
-
-## Lint using flake8
-lint:
-	flake8 src
-
-## Upload Data to S3
-sync_data_to_s3:
-ifeq (default,$(PROFILE))
-	aws s3 sync data/ s3://$(BUCKET)/data/
-else
-	aws s3 sync data/ s3://$(BUCKET)/data/ --profile $(PROFILE)
-endif
-
-## Download Data from S3
-sync_data_from_s3:
-ifeq (default,$(PROFILE))
-	aws s3 sync s3://$(BUCKET)/data/ data/
-else
-	aws s3 sync s3://$(BUCKET)/data/ data/ --profile $(PROFILE)
-endif
-
-## Set up python interpreter environment
-create_environment:
-ifeq (True,$(HAS_CONDA))
-		@echo ">>> Detected conda, creating conda environment."
-ifeq (3,$(findstring 3,$(PYTHON_INTERPRETER)))
-	conda create --name $(PROJECT_NAME) python=3
-else
-	conda create --name $(PROJECT_NAME) python=2.7
-endif
-		@echo ">>> New conda env created. Activate with:\nsource activate $(PROJECT_NAME)"
-else
-	$(PYTHON_INTERPRETER) -m pip install -q virtualenv virtualenvwrapper
-	@echo ">>> Installing virtualenvwrapper if not already installed.\nMake sure the following lines are in shell startup file\n\
-	export WORKON_HOME=$$HOME/.virtualenvs\nexport PROJECT_HOME=$$HOME/Devel\nsource /usr/local/bin/virtualenvwrapper.sh\n"
-	@bash -c "source `which virtualenvwrapper.sh`;mkvirtualenv $(PROJECT_NAME) --python=$(PYTHON_INTERPRETER)"
-	@echo ">>> New virtualenv created. Activate with:\nworkon $(PROJECT_NAME)"
-endif
-
-## Test python environment is setup correctly
-test_environment:
-	$(PYTHON_INTERPRETER) test_environment.py
-
-#################################################################################
-# PROJECT RULES                                                                 #
-#################################################################################
-
-
-
-#################################################################################
-# Self Documenting Commands                                                     #
-#################################################################################
-
-.DEFAULT_GOAL := help
-
-# Inspired by <http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html>
-# sed script explained:
-# /^##/:
-# 	* save line in hold space
-# 	* purge line
-# 	* Loop:
-# 		* append newline + line to hold space
-# 		* go to next line
-# 		* if line starts with doc comment, strip comment character off and loop
-# 	* remove target prerequisites
-# 	* append hold space (+ newline) to line
-# 	* replace newline plus comments by `---`
-# 	* print line
-# Separate expressions are necessary because labels cannot be delimited by
-# semicolon; see <http://stackoverflow.com/a/11799865/1968>
-.PHONY: help
 help:
-	@echo "$$(tput bold)Available rules:$$(tput sgr0)"
-	@echo
-	@sed -n -e "/^## / { \
-		h; \
-		s/.*//; \
-		:doc" \
-		-e "H; \
-		n; \
-		s/^## //; \
-		t doc" \
-		-e "s/:.*//; \
-		G; \
-		s/\\n## /---/; \
-		s/\\n/ /g; \
-		p; \
-	}" ${MAKEFILE_LIST} \
-	| LC_ALL='C' sort --ignore-case \
-	| awk -F '---' \
-		-v ncol=$$(tput cols) \
-		-v indent=19 \
-		-v col_on="$$(tput setaf 6)" \
-		-v col_off="$$(tput sgr0)" \
-	'{ \
-		printf "%s%*s%s ", col_on, -indent, $$1, col_off; \
-		n = split($$2, words, " "); \
-		line_length = ncol - indent; \
-		for (i = 1; i <= n; i++) { \
-			line_length -= length(words[i]) + 1; \
-			if (line_length <= 0) { \
-				line_length = ncol - indent - length(words[i]) - 1; \
-				printf "\n%*s ", -indent, " "; \
-			} \
-			printf "%s ", words[i]; \
-		} \
-		printf "\n"; \
-	}' \
-	| more $(shell test $(shell uname) = Darwin && echo '--no-init --raw-control-chars')
+	@echo "available commands:"
+	@echo "  make download_data              - download the recipenlg dataset from kaggle into data/raw"
+	@echo "  make prepare_data               - clean recipe text and save tokenized recipes"
+	@echo "  make build_pairs                - build the vocabulary and create skip-gram training pairs"
+	@echo "  make train_model                - train the word2vec skip-gram model with negative sampling"
+	@echo "  make inspect_embeddings         - print nearest neighbors for some example words"
+	@echo "  make plot_embeddings            - create pca and tsne visualizations of word embeddings"
+	@echo "  make plot_word_frequency        - plot the word frequency distribution (zipf's law)"
+	@echo "  make visualize_training_diagram - generate a simple diagram explaining skip-gram training"
+	@echo "  make run_all                    - run the full pipeline"
+
+
+download_data:
+	@echo "downloading the recipenlg dataset..."
+	python dataset/download_data.py
+
+
+prepare_data:
+	@echo "cleaning recipes and creating tokenized text..."
+	python dataset/prepare_data.py
+
+
+build_pairs:
+	@echo "building vocabulary and generating skip-gram training pairs..."
+	python dataset/build_pairs.py
+
+
+train_model:
+	@echo "training word2vec model using numpy implementation..."
+	python models/train_word2vec.py
+
+
+inspect_embeddings:
+	@echo "printing nearest words from the trained embeddings..."
+	python visualization/inspect_embeddings.py
+
+
+plot_embeddings:
+	@echo "creating pca and tsne plots of selected word embeddings..."
+	python visualization/plot_embeddings.py
+
+
+plot_word_frequency:
+	@echo "creating word frequency distribution plot..."
+	python visualization/plot_word_frequency.py
+
+
+visualize_training_diagram:
+	@echo "creating diagram explaining skip-gram training..."
+	python visualization/word2vec_training_diagram.py
+
+
+run_all:
+	@echo "running the full word2vec pipeline..."
+	$(MAKE) prepare_data
+	$(MAKE) build_pairs
+	$(MAKE) train_model
+	$(MAKE) inspect_embeddings
+	$(MAKE) plot_embeddings
+	$(MAKE) plot_word_frequency
+	$(MAKE) visualize_training_diagram
