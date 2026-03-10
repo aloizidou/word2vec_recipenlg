@@ -21,7 +21,7 @@ The project focuses on implementing the full **optimization procedure**, includi
 - gradient calculation
 - parameter updates with stochastic gradient descent
 
-The model follows the **Skip-Gram with Negative Sampling** approach and is trained on a subset of the **RecipeNLG dataset**.
+The model follows the **Skip-Gram with Negative Sampling** approach and is trained on a subset of the [RecipeNLG Dataset](https://www.kaggle.com/datasets/paultimothymooney/recipenlg) from kaggle.
 
 The goal is to demonstrate a clear understanding of how word embeddings are learned from text through context prediction.
 
@@ -70,19 +70,6 @@ The dataset follows **Zipf's Law**, where a small number of words appear very fr
 This long-tail distribution is typical for natural language data and explains why techniques such as **negative sampling** are useful for efficient Word2Vec training.
 
 ---
-
-
-<!-- The learned embeddings can be visualized using dimensionality reduction.
-
-### PCA projection
-
-![PCA](reports/figures/embedding_pca.png)
-
-### t-SNE projection
-
-![t-SNE](reports/figures/embedding_tsne.png)
-
-These visualizations show that semantically related ingredients cluster together in the embedding space. -->
 
 ## Word Embedding Visualization
 
