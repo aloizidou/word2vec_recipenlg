@@ -1,145 +1,54 @@
-# Word2Vec from Scratch (NumPy) – RecipeNLG
+# Word2Vec Skip-Gram (NumPy Implementation)
 
-This project implements **Word2Vec (Skip-Gram with Negative Sampling)** from scratch using **pure NumPy**.
-
-The goal is to understand how word embeddings are learned by implementing the full training pipeline without using deep learning frameworks such as PyTorch or TensorFlow.
-
-The model is trained on a subset of the **RecipeNLG dataset**, allowing the embeddings to learn relationships between ingredients and cooking terms.
-
----
-
-# How to Run the Project
-
-The project includes a **Makefile** that runs each stage of the pipeline.
-
-### Show available commands
-make help
-
-
-### Run the full pipeline
-make run_all
-
-
-### Main steps
-make prepare_data
-make build_pairs
-make train_model
-make inspect_embeddings
-make plot_embeddings
-make plot_word_frequency
-make visualize_training_diagram
-
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+![NumPy](https://img.shields.io/badge/Library-NumPy-orange)
+![Model](https://img.shields.io/badge/Model-Word2Vec-lightgrey)
+![Variant](https://img.shields.io/badge/Variant-SkipGram-yellow)
+![Training](https://img.shields.io/badge/Optimization-SGD-green)
+![Dataset](https://img.shields.io/badge/Dataset-RecipeNLG-9cf)
 
 ---
 
-# Implementation Overview
+## Overview
 
-The Word2Vec implementation follows the standard **Skip-Gram with Negative Sampling** approach.
+This repository implements the **core training loop of Word2Vec using pure NumPy**.  
+No deep learning frameworks such as PyTorch or TensorFlow are used.
 
-### 1. Text preprocessing
+The project focuses on implementing the full **optimization procedure**, including:
 
-Recipes are cleaned and tokenized to create sequences of words.
+- forward pass
+- loss computation
+- gradient calculation
+- parameter updates with stochastic gradient descent
 
-Example:
-garlic chicken pasta olive oil
+The model follows the **Skip-Gram with Negative Sampling** approach and is trained on a subset of the **RecipeNLG dataset**.
 
-
----
-
-### 2. Vocabulary creation
-
-All unique words are collected and mapped to integer indices.
-
-These indices allow words to be used in matrix operations during training.
+The goal is to demonstrate a clear understanding of how word embeddings are learned from text through context prediction.
 
 ---
 
-### 3. Skip-Gram training pairs
+## Logic
 
-For each word in a sentence, the model generates training pairs with nearby words within a fixed context window.
+The training pipeline follows these steps:
 
-Example sentence:
-garlic chicken pasta olive oil
-
-
-Training pairs:
-
-(pasta → garlic)
-(pasta → chicken)
-(pasta → olive)
-(pasta → oil)
-
+1. Load and preprocess recipe text
+2. Build the vocabulary and map each word to an index
+3. Generate Skip-Gram training pairs from tokenized sentences
+4. Initialize input and output embedding matrices
+5. Compute prediction scores using dot products
+6. Apply the negative sampling loss
+7. Compute gradients and update parameters using SGD
+8. Save trained embeddings and visualize the results
 
 ---
 
-### 4. Word2Vec model
+## System Flow
 
-The model learns two embedding matrices:
-1. input embeddings
-2. output embeddings
-
-
-During training:
-center word embedding → predicts surrounding words
-
-
-The embeddings are optimized using **stochastic gradient descent**.
-
----
-
-### 5. Negative sampling
-
-Instead of computing probabilities over the entire vocabulary, the model samples a few random words as negative examples.
-
-This significantly reduces computation while still learning meaningful embeddings.
-
----
-
-# Training Example
-
-The diagram below illustrates a Skip-Gram training step.
-
-A center word predicts surrounding context words.
-
-![Skip-Gram Training](reports/figures/skipgram_training_example.png)
-
----
-
-# Word Frequency Distribution
-
-The dataset follows **Zipf's law**, where a few words appear very frequently while most words appear rarely.
-
-![Word Frequency](reports/figures/word_frequency_distribution.png)
-
----
-
-# Word Embedding Visualization
-
-The learned embeddings can be visualized using dimensionality reduction.
-
-### PCA projection
-
-![PCA](reports/figures/embedding_pca.png)
-
-### t-SNE projection
-
-![t-SNE](reports/figures/embedding_tsne.png)
-
-Related ingredients and cooking terms cluster together in the embedding space.
-
----
-
-# Technologies Used
-
-- Python
-- NumPy
-- Matplotlib
-- scikit-learn
-
-No deep learning frameworks were used.
-
----
-
-# Author
-
-Andrea Loizidou
+```mermaid
+flowchart LR
+    A[RecipeNLG Dataset] --> B[Text Preprocessing]
+    B --> C[Tokenized Recipes]
+    C --> D[Skip-Gram Training Pairs]
+    D --> E[Word2Vec Training Loop]
+    E --> F[Trained Embeddings]
+    F --> G[Embedding Visualization]
